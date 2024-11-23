@@ -5,8 +5,12 @@ Final Project
 import tkinter as tk
 from tkinter import font
 
+def ClearWindow(): 
+    for widget in window.winfo_children(): 
+        widget.destroy()
+
 #This function will initialize the first page that asks for the filepath
-def InitializeWelcome():
+def WelcomePage():
     #Make these global since we will need to access them outside the function
     global window, entWelcome, fileLoc
     
@@ -15,17 +19,15 @@ def InitializeWelcome():
     window.title('Search Text File')
     window.geometry()
     window.resizable(True, True) 
-
-    #Font for the text
-    fntWelcome = font.Font(family="Helvetica", size=12, weight="bold")
     
     #Frame to hold everything in
-    frmWelcome = tk.Frame(window, padx=40, pady=40) 
-    frmWelcome.pack(side="top")
+    frmWelcome = tk.Frame(window) 
+    frmWelcome.pack(side="top", padx=20, pady=10)
 
     #This asks the user for the file location
-    lblWelcome = tk.Label(frmWelcome, font=fntWelcome, text='Welcome, please type the file location(absolute file location):')
-    lblWelcome.pack(side="top")
+    lblWelcome = tk.Label(frmWelcome, font=("Helvetica", 12, "normal"), text='Welcome, please type the file location(absolute file location):')
+    lblWelcome.config(font=("Helvetica", 12, "bold"))
+    lblWelcome.pack(side="top", pady=10)
     
     #This is the entry to type into
     entWelcome = tk.Entry(frmWelcome, cursor="hand2", width=60)
@@ -39,7 +41,7 @@ def InitializeWelcome():
     #Button to submit entry value. It calls GetFile() when clicked
     btnWelcome = tk.Button(frmWelcome, text='Submit', background="darkorange2", activebackground="blue2", 
                            command=GetFile, cursor="hand2")
-    btnWelcome.pack(side="top")
+    btnWelcome.pack(side="top", pady=20)
     
     fileLoc = ""
     
@@ -71,8 +73,47 @@ def GetFile():
     else:    
         fileLoc = tempFileLoc
         print(f"File location is: {fileLoc}")
+        #Call function to get file data
+        FindPage()
+        
+#This function will open the next page that 
+def FindPage():
+    ClearWindow()
     
+    frmSearch = tk.Frame(window)
+    frmSearch.pack(side=("top"), pady=20)
+    
+    #This asks the user for the file location
+    # lblWelcome = tk.Label(frmSearch, font=fntWelcome, text='Welcome, please type the file location(absolute file location):')
+    # lblWelcome.config(font=("Helvetica", 12, "bold"))
+    lblWelcome = tk.Label(frmSearch, text='Search for:', font=("Helvetica", 12, "normal"))
+    lblWelcome.pack(side="left")
+    
+    #This is the entry to type into
+    entWelcome = tk.Entry(frmSearch, cursor="hand2", width=20)
+    entWelcome.pack(side="left", padx=10)
+    
+    #Button to submit entry value. It calls GetFile() when clicked
+    btnWelcome = tk.Button(frmSearch, text='Search', background="darkorange2", activebackground="blue2", 
+                           command=Search, cursor="hand2")
+    btnWelcome.pack(side="left", padx=10)
+    
+def Search():
+    #Search function here
+    
+    frmSearchResults = tk.Frame(window)
+    frmSearchResults.pack(side=("top"), pady=20)
+    
+    lblWelcome = tk.Label(frmSearchResults, text='XX instances found', font=("Helvetica", 12, "normal"))
+    lblWelcome.pack(side="top", pady=10)
+    
+    lblWelcome = tk.Label(frmSearchResults, text='Instance X:', font=("Helvetica", 12, "normal"))
+    lblWelcome.pack(side="top", pady=10)
 
-InitializeWelcome()
+    
+        
+
+WelcomePage()
 
 window.mainloop()
+#C:\Users\jerry\OneDrive\CGN3421-Computer Methods in Civil Engineering\L16 Variable Passing and Scope.pdf
