@@ -39,6 +39,7 @@ def EnteredFileLoc():
         entWelcome.insert(0, "Invalid Input")
         
     print(f"File location is: {fileLoc}")
+    #need to make user feedback more accurate
     
 
 
