@@ -207,4 +207,5 @@ def PrevButton():
 
 WelcomePage()
 window.mainloop()
-#C:\Users\jerry\OneDrive\CGN3421-Computer Methods in Civil Engineering\L16 Variable Passing and Scope.pdf
+
+#"C:\Users\jerry\OneDrive\CGN3421-Computer Methods in Civil Engineering\Final Project\Test2.txt"
