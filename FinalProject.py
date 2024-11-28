@@ -9,6 +9,7 @@ from tkinter import font
 def ClearWindow(): 
     for widget in window.winfo_children(): 
         widget.destroy()
+        
 
 #This function will initialize the first page that asks for the filepath
 def WelcomePage():
@@ -49,7 +50,7 @@ def WelcomePage():
 #This function is called when the submit button on the first page is clicked    
 def GetFile():
     #Set to global so we can acess later
-    global fileLoc
+    global fileLoc, fileContent
         
     #Get entry value
     tempFileLoc = entWelcome.get()
@@ -72,15 +73,29 @@ def GetFile():
         
     else:    
         fileLoc = tempFileLoc
+        if fileLoc.find("\\") == -1:
+            fileLoc = fileLoc.readlines("\\", "/")
         print(f"File location is: {fileLoc}")
         
-        '''Call function to get file data'''
-        
+        #Call function to get file data
+        fileContent = load_file(fileLoc)
         FindPage()
         
+        
+def load_file(file_path):
+    #Load the text file and return its content as a single string
+    try:
+        with open(file_path, 'r') as file:  # Open the file in read mode
+            content = file.read()  # Read the entire content of the file
+        return content
+    except FileNotFoundError:
+        print("The file was not found. Please check the path and try again.")
+        return None
+    
+     
 #This function will open the next page that searches the first word
 def FindPage():
-    global frmSearchResults
+    global frmSearchResults, entSearch
     
     ClearWindow()
     
@@ -89,25 +104,26 @@ def FindPage():
     frmSearch.pack(side=("top"), pady=20)
     
     #This asks the user for the word to search
-    lblWelcome = tk.Label(frmSearch, text="Search for:", font=("Helvetica", 12, "normal"))
-    lblWelcome.pack(side="left")
+    lblSearch = tk.Label(frmSearch, text="Search for:", font=("Helvetica", 12, "normal"))
+    lblSearch.pack(side="left")
     
     #This is the entry to type the search word into
-    entWelcome = tk.Entry(frmSearch, cursor="hand2", width=20)
-    entWelcome.pack(side="left", padx=10)
+    entSearch = tk.Entry(frmSearch, cursor="hand2", width=20)
+    entSearch.pack(side="left", padx=10)
     
     #Button to submit search word. It calls Search() when clicked
-    btnWelcome = tk.Button(frmSearch, text="Search", background="darkorange2", activebackground="blue2", 
+    btnSearch = tk.Button(frmSearch, text="Search", background="darkorange2", activebackground="blue2", 
                            command=Search, cursor="hand2")
-    btnWelcome.pack(side="left", padx=10)
+    btnSearch.pack(side="left", padx=10)
     
     #This is just here to initialize it so that ther is no error clearning it when Search is called
     frmSearchResults = tk.Frame(window)
     
+    
 def Search():
     global frmSearchResults
     
-    '''Search function here'''
+    instances = count_word(entSearch.get(), fileContent)
     
     #This clears the search results frame everytime the user clicks the search button
     frmSearchResults.destroy()
@@ -117,7 +133,7 @@ def Search():
     frmSearchResults.pack(side="top")
     
     #This just displays the total number of instances
-    lblSearchInstances = tk.Label(frmSearchResults, text=f"{100} instances found", font=("Helvetica", 12, "normal"))
+    lblSearchInstances = tk.Label(frmSearchResults, text=f"{instances} instances found", font=("Helvetica", 12, "normal"))
     lblSearchInstances.pack(side="top", pady=10)
     
     #This displays which instance it is showing
@@ -160,15 +176,35 @@ def Search():
                         command=PrevButton, cursor="hand2")
     btnPrev.pack(side="left", padx=30)
         
+    
+def count_word(word, text):
+    """Count the number of times a word appears in the text, ignoring punctuation."""
+    # Define a set of common punctuation characters to remove
+    punctuation = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+
+    # Normalize the word to lowercase for case-insensitive comparison
+    word = word.lower()
+
+    # Remove punctuation from the text
+    cleaned_text = ''.join(char if char not in punctuation else ' ' for char in text).lower()
+
+    # Split the cleaned text into words and count matches
+    words = cleaned_text.split()
+    count = words.count(word)
+    
+    return count
+          
+           
 #This function will move to the next sentence with the instance 
 def NextButton():
     pass
+
 
 #This function will move to the previous sentence with the instance 
 def PrevButton():
     pass
 
-WelcomePage()
 
+WelcomePage()
 window.mainloop()
 #C:\Users\jerry\OneDrive\CGN3421-Computer Methods in Civil Engineering\L16 Variable Passing and Scope.pdf
